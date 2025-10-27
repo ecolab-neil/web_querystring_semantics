@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Classes Example</title>
+    <style>
+        /* Style for the visible button */
+        .visible-button {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style for the invisible button */
+        .invisible-button {
+            width: 100px;      /* Width of the invisible button */
+            height: 100px;     /* Height of the invisible button */
+            background-color: transparent; /* Make it transparent */
+            border: none;      /* Remove borders */
+            cursor: pointer;   /* Show pointer cursor on hover */
+        }
+
+        /* Style for the invisible offscreen button */
+        .invisible-offscreen-button {
+            position: absolute;
+            top: -1px;         /* Move button offscreen */
+            left: -1px;
+            width: 100px;      /* Width of the invisible offscreen button */
+            height: 100px;     /* Height of the invisible offscreen button */
+            background-color: transparent; /* Make it transparent */
+            border: none;      /* Remove borders */
+            cursor: pointer;   /* Show pointer cursor on hover */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Visible button -->
+<button class="visible-button" id="visibleButton">Visible Button</button>
+
+<!-- Invisible button -->
+<button class="invisible-button" id="invisibleButton"></button>
+
+<!-- Invisible offscreen button -->
+<button class="invisible-offscreen-button" id="invisibleOffscreenButton"></button>
+
+<script>
+    // Event listeners for each button
+    document.getElementById('visibleButton').addEventListener('click', function() {
+        console.log('✅ Visible Button clicked!');
+    });
+
+    document.getElementById('invisibleButton').addEventListener('click', function() {
+        console.log('✅ Invisible Button clicked!');
+    });
+
+    document.getElementById('invisibleOffscreenButton').addEventListener('click', function() {
+        console.log('✅ Invisible Offscreen Button clicked!');
+    });
+
+    // Optional: Add to the invisible button to still trigger the visible button
+    document.getElementById('visibleButton').addEventListener('click', function() {
+        document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
+    });
+
+    // Optional: Add to the invisible offscreen button to still trigger the visible button
+    document.getElementById('invisibleButton').addEventListener('click', function() {
+        document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
+    });
+</script>
+</body>
+</html>

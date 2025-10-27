@@ -31,7 +31,75 @@
 
   <title>web_querystring_semantics</title>
   <link rel="manifest" href="manifest.json">
-  
+  <style>
+    /* Flutter container */
+    .flutter-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+    }
+
+    /* Style for the visible button */
+    .visible-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Style for the invisible button */
+    .invisible-button {
+        position: absolute;
+        top: 10px;
+        left: 120px;
+        z-index: 1000;
+        width: 100px;      /* Width of the invisible button */
+        height: 100px;     /* Height of the invisible button */
+        background-color: transparent; /* Make it transparent */
+        border: none;      /* Remove borders */
+        cursor: pointer;   /* Show pointer cursor on hover */
+    }
+
+    /* Style for the invisible offscreen button */
+    .invisible-offscreen-button {
+        position: absolute;
+        top: -1px;         /* Move button offscreen */
+        left: -1px;
+        z-index: 1000;
+        width: 100px;      /* Width of the invisible offscreen button */
+        height: 100px;     /* Height of the invisible offscreen button */
+        background-color: transparent; /* Make it transparent */
+        border: none;      /* Remove borders */
+        cursor: pointer;   /* Show pointer cursor on hover */
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Event listeners for each button
+      document.getElementById('visibleButton').addEventListener('click', function() {
+          console.log('✅ Visible Button clicked!');
+      });
+
+      document.getElementById('invisibleButton').addEventListener('click', function() {
+          console.log('✅ Invisible Button clicked!');
+      });
+
+      document.getElementById('invisibleOffscreenButton').addEventListener('click', function() {
+          console.log('✅ Invisible Offscreen Button clicked!');
+      });
+
+      // Click the invisibleButton to trigger the invisibleOffscreenButton
+      document.getElementById('invisibleButton').addEventListener('click', function() {
+          document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
+      });
+    });
+  </script>
   <!-- Semantics verification function -->
   <script>
     // Make this function globally available for Flutter to call
@@ -106,7 +174,7 @@
       const port = window.location.port;
       const config = {
         '1111': true,   // Auto-enable for testing
-        '8080': true,   // Auto-enable for development
+        '8080': false,   // Auto-enable for development
         '0000': false,  // Explicitly disabled for testing disabled state
       };
       
@@ -178,6 +246,15 @@
   </script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <!-- Flutter container with buttons stacked on top -->
+  <div class="flutter-container" id="flutter_host">
+    <!-- Flutter app will render here -->
+    <script src="flutter_bootstrap.js" async></script>
+    
+    <!-- Buttons stacked on top of Flutter -->
+    <button class="visible-button" id="visibleButton">Visible Button</button>
+    <button class="invisible-button" id="invisibleButton"></button>
+    <button class="invisible-offscreen-button" id="invisibleOffscreenButton"></button>
+  </div>
 </body>
 </html>
