@@ -1,0 +1,14 @@
+# Maestro Test: Flutter Web Semantics Toggle
+# Simple version - tests basic visibility after semantics enabled
+# For full JavaScript testing, use the manual test documentation
+
+url: http://localhost:8080
+---
+- launchApp
+
+# Wait for page to load
+- assertVisible: "QueryString Semantics Demo"
+
+# Verify basic elements are present
+- assertVisible: "Query String:"
+- assertVisible: "Enable Semantics:"

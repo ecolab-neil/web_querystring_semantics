@@ -125,76 +125,37 @@
     function autoEnableAccessibility() {
       console.log('🔍 Searching for Flutter invisible accessibility button...');
       
-      // Try various selectors to find the invisible button
-      // Flutter uses flt-semantics-placeholder for the invisible button
-      const selectors = [
-        'flt-semantics-placeholder[aria-label="Enable accessibility"]',
-       // 'flt-semantics-placeholder[aria-label*="Enable"]',
-      //  'flt-semantics-placeholder[role="button"]',
-        // 'button[aria-label="Enable accessibility"]',
-        // 'button[aria-label*="Enable"]',
-      ];
+      const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
+      console.log(`Trying selector: "${selector}"`);
       
-      console.log(`📋 Trying ${selectors.length} selector(s) to find the invisible button`);
+      const invisibleButton = document.querySelector(selector);
       
-      let invisibleButton = null;
-      let usedSelector = null;
-      let triedSelectors = 0;
-      
-      for (const selector of selectors) {
-        triedSelectors++;
-        console.log(`[${triedSelectors}/${selectors.length}] Trying: "${selector}"`);
-        invisibleButton = document.querySelector(selector);
-        if (invisibleButton) {
-          usedSelector = selector;
-          console.log(`✅ Found button with selector: "${selector}"`);
-          break;
-        } else {
-          console.log(`⚠️ No button found with: "${selector}"`);
-        }
+      if (!invisibleButton) {
+        console.log('❌ Flutter invisible button not found');
+        return false;
       }
       
-      console.log(`📊 Tried ${triedSelectors} selector(s), ${invisibleButton ? '1 successful' : 'none successful'}`);
+      console.log('✅ Found invisible button');
+      console.log(`   Element:`, invisibleButton);
+      console.log(`   aria-label: ${invisibleButton.getAttribute('aria-label')}`);
       
-      // Debug: log all buttons on the page
-      const allButtons = document.querySelectorAll('button, [role="button"], flt-semantics-placeholder');
-      console.log(`📊 Total buttons/button-like elements on page: ${allButtons.length}`);
-      allButtons.forEach((btn, i) => {
-        const ariaLabel = btn.getAttribute('aria-label') || 'no label';
-        const role = btn.getAttribute('role') || 'no role';
-        const tag = btn.tagName.toLowerCase();
-        console.log(`  Button ${i + 1}: ${tag}[role="${role}"][aria-label="${ariaLabel}"]`);
-      });
-      
-      if (invisibleButton) {
-        try {
-          console.log(`🖱️ Clicking button with selector: "${usedSelector}"`);
-          console.log(`   Button element:`, invisibleButton);
-          console.log(`   Button aria-label:`, invisibleButton.getAttribute('aria-label'));
-          console.log(`   Button innerHTML:`, invisibleButton.innerHTML);
-          
-          invisibleButton.click();
-          console.log('✅ Successfully clicked invisible accessibility button');
-          console.log('✅ Accessibility should now be enabled');
-          
-          // Verify after a delay
-          setTimeout(() => {
-            const verify = verifySemanticsInDOM();
-            if (verify.actuallyWorking) {
-              console.log('🎉 Verification confirmed: Semantics are working!');
-            } else {
-              console.log('⚠️ Warning: Button clicked but semantics may not be fully active');
-            }
-          }, 300);
-          
-          return true;
-        } catch (error) {
-          console.error('❌ Error clicking button:', error);
-          return false;
-        }
-      } else {
-        console.log('❌ Flutter invisible button not found - accessibility will remain off');
-        console.log('💡 Tip: Ensure Flutter has rendered the invisible button');
+      try {
+        invisibleButton.click();
+        console.log('✅ Clicked button - accessibility enabled');
+        
+        // Verify after delay
+        setTimeout(() => {
+          const verify = verifySemanticsInDOM();
+          if (verify.actuallyWorking) {
+            console.log('🎉 Verification confirmed: Semantics working!');
+          } else {
+            console.log('⚠️ Warning: Button clicked but semantics may not be active');
+          }
+        }, 300);
+        
+        return true;
+      } catch (error) {
+        console.error('❌ Error clicking button:', error);
         return false;
       }
     }

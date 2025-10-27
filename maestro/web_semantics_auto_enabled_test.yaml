@@ -1,0 +1,34 @@
+# Maestro Test: Flutter Web Semantics Auto-Enabled
+# Tests that semantics are enabled on port 1111 (demo/QA environment)
+#
+# This test verifies the auto-enable functionality configured in index.html:
+# - Port 1111 is configured for automatic accessibility enabling
+# - Port 8080 requires manual click
+# - Port 0000 is disabled for testing disabled state
+#
+# Reference: Flutter Web Auto-Enable Configuration
+
+url: http://localhost:1111
+---
+- launchApp
+
+# Step 1: Wait for page to load
+- assertVisible: "QueryString Semantics Demo"
+
+# Step 2: Wait a moment for auto-enable JavaScript to run (from index.html)
+- waitForAnimationToEnd
+
+# Step 3: Verify buttons ARE visible immediately (semantics auto-enabled)
+# The JavaScript in index.html auto-clicks the invisible button on port 1111
+- assertVisible: "Acc On"
+- assertVisible: "Go to Page 1"
+- assertVisible: "Go to Page 2"
+
+# Step 4: Verify navigation works with semantics enabled
+- tapOn: "Go to Page 1"
+- assertVisible: "Page 1"
+
+# Step 5: Navigate back and verify state persists
+- tapOn: "Go to Home"
+- assertVisible: "QueryString Semantics Demo"
+- assertVisible: "Acc On"
