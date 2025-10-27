@@ -62,6 +62,7 @@
         width: 100px;      /* Width of the invisible button */
         height: 100px;     /* Height of the invisible button */
         background-color: transparent; /* Make it transparent */
+        color: transparent; /* Make text color transparent */
         border: none;      /* Remove borders */
         cursor: pointer;   /* Show pointer cursor on hover */
     }
@@ -75,6 +76,7 @@
         width: 100px;      /* Width of the invisible offscreen button */
         height: 100px;     /* Height of the invisible offscreen button */
         background-color: transparent; /* Make it transparent */
+        color: transparent; /* Make text color transparent */
         border: none;      /* Remove borders */
         cursor: pointer;   /* Show pointer cursor on hover */
     }
@@ -96,7 +98,12 @@
 
       // Click the invisibleButton to trigger the invisibleOffscreenButton
       document.getElementById('invisibleButton').addEventListener('click', function() {
-          document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
+ const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
+console.log(`Trying selector: "${selector}"`);
+
+const invisibleButton = document.querySelector(selector);
+invisibleButton.click();
+          //document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
       });
     });
   </script>
@@ -253,7 +260,7 @@
     
     <!-- Buttons stacked on top of Flutter -->
     <button class="visible-button" id="visibleButton">Visible Button</button>
-    <button class="invisible-button" id="invisibleButton"></button>
+    <button class="invisible-button" aria-label="Invisible Button" id="invisibleButton"></button>
     <button class="invisible-offscreen-button" id="invisibleOffscreenButton"></button>
   </div>
 </body>
