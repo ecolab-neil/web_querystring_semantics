@@ -129,16 +129,21 @@
       // Flutter uses flt-semantics-placeholder for the invisible button
       const selectors = [
         'flt-semantics-placeholder[aria-label="Enable accessibility"]',
-        'flt-semantics-placeholder[aria-label*="Enable"]',
-        'flt-semantics-placeholder[role="button"]',
-        'button[aria-label="Enable accessibility"]',
-        'button[aria-label*="Enable"]',
+       // 'flt-semantics-placeholder[aria-label*="Enable"]',
+      //  'flt-semantics-placeholder[role="button"]',
+        // 'button[aria-label="Enable accessibility"]',
+        // 'button[aria-label*="Enable"]',
       ];
+      
+      console.log(`📋 Trying ${selectors.length} selector(s) to find the invisible button`);
       
       let invisibleButton = null;
       let usedSelector = null;
+      let triedSelectors = 0;
       
       for (const selector of selectors) {
+        triedSelectors++;
+        console.log(`[${triedSelectors}/${selectors.length}] Trying: "${selector}"`);
         invisibleButton = document.querySelector(selector);
         if (invisibleButton) {
           usedSelector = selector;
@@ -148,6 +153,8 @@
           console.log(`⚠️ No button found with: "${selector}"`);
         }
       }
+      
+      console.log(`📊 Tried ${triedSelectors} selector(s), ${invisibleButton ? '1 successful' : 'none successful'}`);
       
       // Debug: log all buttons on the page
       const allButtons = document.querySelectorAll('button, [role="button"], flt-semantics-placeholder');
