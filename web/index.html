@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="web_querystring_semantics">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>web_querystring_semantics</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Semantics verification function -->
+  <script>
+    // Make this function globally available for Flutter to call
+    window.verifySemanticsInDOM = function() {
+      const fltSemantics = document.querySelectorAll('flt-semantics');
+      const buttons = document.querySelectorAll('[role="button"]');
+      const ariaLabels = document.querySelectorAll('[aria-label]');
+      const roles = document.querySelectorAll('[role]');
+      
+      const url = new URLSearchParams(window.location.search);
+      const urlEnabled = url.get('enableSemantics') === 'true';
+      
+      const hasSubstantialSemantics = fltSemantics.length > 5 && buttons.length > 0;
+      
+      const result = {
+        fltSemanticsCount: fltSemantics.length,
+        buttonsCount: buttons.length,
+        ariaLabelsCount: ariaLabels.length,
+        rolesCount: roles.length,
+        urlEnabled: urlEnabled,
+        actuallyWorking: hasSubstantialSemantics,
+        page: window.location.pathname,
+        timestamp: new Date().toISOString()
+      };
+      
+      console.log('='.repeat(60));
+      console.log('🎯 SEMANTICS VERIFICATION');
+      console.log('='.repeat(60));
+      console.log(`📊 Semantic Elements (flt-semantics): ${fltSemantics.length}`);
+      console.log(`🔘 Buttons with role: ${buttons.length}`);
+      console.log(`🏷️  ARIA Labels: ${ariaLabels.length}`);
+      console.log(`🎭 Total Roles: ${roles.length}`);
+      console.log(`🌐 Full URL: ${window.location.href}`);
+      console.log(`🌐 URL Parameter: enableSemantics=${url.get('enableSemantics') || 'not set'}`);
+      console.log(`📍 Page: ${window.location.pathname}`);
+      console.log(`🔌 Port: ${window.location.port || 'default'}`);
+      console.log('─'.repeat(60));
+      
+      if (hasSubstantialSemantics) {
+        console.log('✅ SUCCESS: Semantics are ENABLED and working');
+        console.log('   Screen readers can read this page!');
+        
+        // Visual indicator
+        document.body.style.border = '5px solid green';
+        document.title = '[✅ ENABLED] ' + document.title.replace(/^\[.*?\] /, '');
+      } else {
+        console.log('✅ Semantics are DISABLED');
+        console.log('   Page has minimal accessibility');
+        
+        // Visual indicator
+        document.body.style.border = '5px solid red';
+        document.title = '[❌ DISABLED] ' + document.title.replace(/^\[.*?\] /, '');
+      }
+      
+      console.log('='.repeat(60));
+      
+      return result;
+    };
+    
+    /**
+     * Determines if accessibility should be auto-enabled based on port configuration
+     * 
+     * @returns {boolean} true if auto-enable is configured for current port
+     * 
+     * Port configuration:
+     * - Port 1111: Auto-enable (true) - Testing environment
+     * - Port 8080: Auto-enable (true) - Development environment
+     * - Port 0000: Auto-disable (false) - Disabled for testing
+     * - Other ports: Follow URL parameter
+     */
+    function shouldAutoEnableAccessibility() {
+      const port = window.location.port;
+      const config = {
+        '1111': true,   // Auto-enable for testing
+        '8080': true,   // Auto-enable for development
+        '0000': false,  // Explicitly disabled for testing disabled state
+      };
+      
+      return config[port] === true;
+    }
+    
+    /**
+     * Attempts to click the Flutter invisible accessibility button
+     * This simulates the user clicking the invisible "Enable accessibility" button
+     * 
+     * According to Flutter docs: https://docs.flutter.dev/ui/accessibility/web-accessibility#invisible-button
+     * The button has aria-label="Enable accessibility"
+     * 
+     * @returns {boolean} true if button was found and clicked, false otherwise
+     */
+    function autoEnableAccessibility() {
+      console.log('🔍 Searching for Flutter invisible accessibility button...');
+      
+      // Try various selectors to find the invisible button
+      // Flutter uses flt-semantics-placeholder for the invisible button
+      const selectors = [
+        'flt-semantics-placeholder[aria-label="Enable accessibility"]',
+        'flt-semantics-placeholder[aria-label*="Enable"]',
+        'flt-semantics-placeholder[role="button"]',
+        'button[aria-label="Enable accessibility"]',
+        'button[aria-label*="Enable"]',
+      ];
+      
+      let invisibleButton = null;
+      let usedSelector = null;
+      
+      for (const selector of selectors) {
+        invisibleButton = document.querySelector(selector);
+        if (invisibleButton) {
+          usedSelector = selector;
+          console.log(`✅ Found button with selector: "${selector}"`);
+          break;
+        } else {
+          console.log(`⚠️ No button found with: "${selector}"`);
+        }
+      }
+      
+      // Debug: log all buttons on the page
+      const allButtons = document.querySelectorAll('button, [role="button"], flt-semantics-placeholder');
+      console.log(`📊 Total buttons/button-like elements on page: ${allButtons.length}`);
+      allButtons.forEach((btn, i) => {
+        const ariaLabel = btn.getAttribute('aria-label') || 'no label';
+        const role = btn.getAttribute('role') || 'no role';
+        const tag = btn.tagName.toLowerCase();
+        console.log(`  Button ${i + 1}: ${tag}[role="${role}"][aria-label="${ariaLabel}"]`);
+      });
+      
+      if (invisibleButton) {
+        try {
+          console.log(`🖱️ Clicking button with selector: "${usedSelector}"`);
+          console.log(`   Button element:`, invisibleButton);
+          console.log(`   Button aria-label:`, invisibleButton.getAttribute('aria-label'));
+          console.log(`   Button innerHTML:`, invisibleButton.innerHTML);
+          
+          invisibleButton.click();
+          console.log('✅ Successfully clicked invisible accessibility button');
+          console.log('✅ Accessibility should now be enabled');
+          
+          // Verify after a delay
+          setTimeout(() => {
+            const verify = verifySemanticsInDOM();
+            if (verify.actuallyWorking) {
+              console.log('🎉 Verification confirmed: Semantics are working!');
+            } else {
+              console.log('⚠️ Warning: Button clicked but semantics may not be fully active');
+            }
+          }, 300);
+          
+          return true;
+        } catch (error) {
+          console.error('❌ Error clicking button:', error);
+          return false;
+        }
+      } else {
+        console.log('❌ Flutter invisible button not found - accessibility will remain off');
+        console.log('💡 Tip: Ensure Flutter has rendered the invisible button');
+        return false;
+      }
+    }
+    
+    // Auto-verify on page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        console.log('🔍 Auto-checking semantics on page load...');
+        window.verifySemanticsInDOM();
+        
+        // Auto-enable accessibility based on port configuration
+        if (shouldAutoEnableAccessibility()) {
+          console.log(`🚀 Port ${window.location.port} configured for auto-enable`);
+          autoEnableAccessibility();
+        } else if (window.location.port === '0000') {
+          console.log('🚫 Port 0000 configured for auto-disable - skipping auto-enable');
+        }
+      }, 500);
+    });
+  </script>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
