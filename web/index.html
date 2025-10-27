@@ -173,7 +173,7 @@ invisibleButton.click();
      * 
      * Port configuration:
      * - Port 1111: Auto-enable (true) - Testing environment
-     * - Port 8080: Auto-enable (true) - Development environment
+     * - Port 8080: Auto-enable (falase) - Development environment
      * - Port 0000: Auto-disable (false) - Disabled for testing
      * - Other ports: Follow URL parameter
      */
@@ -181,8 +181,9 @@ invisibleButton.click();
       const port = window.location.port;
       const config = {
         '1111': true,   // Auto-enable for testing
-        '8080': false,   // Auto-enable for development
+        '8080': false,   // Auto-disable for development
         '0000': false,  // Explicitly disabled for testing disabled state
+        // not sure yet if port 0000 is possible, considr swtiching to 1234 and 4321 or deploying with text
       };
       
       return config[port] === true;
@@ -259,7 +260,7 @@ invisibleButton.click();
     <script src="flutter_bootstrap.js" async></script>
     
     <!-- Buttons stacked on top of Flutter -->
-    <button class="visible-button" id="visibleButton">Visible Button</button>
+    <button class="invisible-button" id="visibleButton">Pretend Visible Button</button>
     <button class="invisible-button" aria-label="Invisible Button" id="invisibleButton"></button>
     <button class="invisible-offscreen-button" id="invisibleOffscreenButton"></button>
   </div>
