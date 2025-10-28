@@ -8,6 +8,9 @@ import 'string_extensions.dart';
 bool shouldEnableSemantics({bool enableSemanticsPerFlavor = false}) =>
     'enableSemantics'.toBoolFromQuery(defaultValue: enableSemanticsPerFlavor);
 
+// NOTE: a button to enable from flutter doens't help
+// bc the button won't be tappable by automation unless the semantics are there
+
 void main() {
   runApp(const MyApp());
 
@@ -18,41 +21,6 @@ void main() {
               ?.toLowerCase() ==
           'true') {
     SemanticsBinding.instance.ensureSemantics();
-  }
-}
-
-/// Reusable semantics toggle button for app bar
-class SemanticsToggleButton extends StatelessWidget {
-  final bool isEnabled;
-  final VoidCallback onToggle;
-
-  const SemanticsToggleButton({
-    super.key,
-    required this.isEnabled,
-    required this.onToggle,
-  });
-
-  @override
-  Widget build(BuildContext context) => TextButton(
-      onPressed: onToggle,
-      child: Text(
-        isEnabled ? 'Acc On' : 'Acc Off',
-        style: TextStyle(color: Colors.transparent),
-      ),
-      onHover: (hovering) {
-        // Optional: Add subtle hover effect
-      },
-    ).withTooltip(
-      isEnabled
-          ? 'Accessibility (Semantics) Enabled: Screen readers can read this page. Click to disable.'
-          : 'Accessibility (Semantics) Disabled: Screen readers have limited access. Click to enable.',
-    );
-}
-
-/// Extension to add tooltip to any widget
-extension TooltipExtension on Widget {
-  Widget withTooltip(String message) {
-    return Tooltip(message: message, child: this);
   }
 }
 
@@ -212,12 +180,6 @@ class _QueryStringPageState extends State<QueryStringPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('QueryString Semantics Demo'),
-        actions: [
-          SemanticsToggleButton(
-            isEnabled: widget.semanticsEnabled,
-            onToggle: () => widget.onToggleSemantics(!widget.semanticsEnabled),
-          ),
-        ],
       ),
       body: Center(
         child: Column(
@@ -329,12 +291,6 @@ class Page1 extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Page 1'),
-        actions: [
-          SemanticsToggleButton(
-            isEnabled: semanticsEnabled,
-            onToggle: () => onToggleSemantics(!semanticsEnabled),
-          ),
-        ],
       ),
       body: Center(
         child: Column(
@@ -384,12 +340,6 @@ class Page2 extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Page 2'),
-        actions: [
-          SemanticsToggleButton(
-            isEnabled: semanticsEnabled,
-            onToggle: () => onToggleSemantics(!semanticsEnabled),
-          ),
-        ],
       ),
       body: Center(
         child: Column(

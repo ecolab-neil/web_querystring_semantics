@@ -32,224 +32,38 @@
   <title>web_querystring_semantics</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    /* Flutter container */
-    .flutter-container {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-    }
+    .flutter-container {position: relative;width: 100%;height: 100vh;}
 
-    /* Style for the visible button */
-    .visible-button {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 1000;
-        background-color: blue;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+
 
     /* Style for the invisible button */
     .invisible-button {
         position: absolute;
-        top: 10px;
-        left: 120px;
+        top: 1px;
+        left: 1px;
         z-index: 1000;
-        width: 100px;      /* Width of the invisible button */
-        height: 100px;     /* Height of the invisible button */
+        width: 1px;      /* Width of the invisible button */
+        height: 1px;     /* Height of the invisible button */
         background-color: transparent; /* Make it transparent */
         color: transparent; /* Make text color transparent */
         border: none;      /* Remove borders */
         cursor: pointer;   /* Show pointer cursor on hover */
     }
 
-    /* Style for the invisible offscreen button */
-    .invisible-offscreen-button {
-        position: absolute;
-        top: -1px;         /* Move button offscreen */
-        left: -1px;
-        z-index: 1000;
-        width: 100px;      /* Width of the invisible offscreen button */
-        height: 100px;     /* Height of the invisible offscreen button */
-        background-color: transparent; /* Make it transparent */
-        color: transparent; /* Make text color transparent */
-        border: none;      /* Remove borders */
-        cursor: pointer;   /* Show pointer cursor on hover */
-    }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Event listeners for each button
-      document.getElementById('visibleButton').addEventListener('click', function() {
-          console.log('✅ Visible Button clicked!');
-      });
 
       document.getElementById('invisibleButton').addEventListener('click', function() {
           console.log('✅ Invisible Button clicked!');
       });
 
-      document.getElementById('invisibleOffscreenButton').addEventListener('click', function() {
-          console.log('✅ Invisible Offscreen Button clicked!');
-      });
-
       // Click the invisibleButton to trigger the invisibleOffscreenButton
       document.getElementById('invisibleButton').addEventListener('click', function() {
- const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
-console.log(`Trying selector: "${selector}"`);
-
-const invisibleButton = document.querySelector(selector);
-invisibleButton.click();
-          //document.getElementById('invisibleOffscreenButton').click(); // Trigger invisibleOffscreenButton button's click
+          const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
+          const invisibleButton = document.querySelector(selector);
+          invisibleButton.click();
       });
-    });
-  </script>
-  <!-- Semantics verification function -->
-  <script>
-    // Make this function globally available for Flutter to call
-    window.verifySemanticsInDOM = function() {
-      const fltSemantics = document.querySelectorAll('flt-semantics');
-      const buttons = document.querySelectorAll('[role="button"]');
-      const ariaLabels = document.querySelectorAll('[aria-label]');
-      const roles = document.querySelectorAll('[role]');
-      
-      const url = new URLSearchParams(window.location.search);
-      const urlEnabled = url.get('enableSemantics') === 'true';
-      
-      const hasSubstantialSemantics = fltSemantics.length > 5 && buttons.length > 0;
-      
-      const result = {
-        fltSemanticsCount: fltSemantics.length,
-        buttonsCount: buttons.length,
-        ariaLabelsCount: ariaLabels.length,
-        rolesCount: roles.length,
-        urlEnabled: urlEnabled,
-        actuallyWorking: hasSubstantialSemantics,
-        page: window.location.pathname,
-        timestamp: new Date().toISOString()
-      };
-      
-      console.log('='.repeat(60));
-      console.log('🎯 SEMANTICS VERIFICATION');
-      console.log('='.repeat(60));
-      console.log(`📊 Semantic Elements (flt-semantics): ${fltSemantics.length}`);
-      console.log(`🔘 Buttons with role: ${buttons.length}`);
-      console.log(`🏷️  ARIA Labels: ${ariaLabels.length}`);
-      console.log(`🎭 Total Roles: ${roles.length}`);
-      console.log(`🌐 Full URL: ${window.location.href}`);
-      console.log(`🌐 URL Parameter: enableSemantics=${url.get('enableSemantics') || 'not set'}`);
-      console.log(`📍 Page: ${window.location.pathname}`);
-      console.log(`🔌 Port: ${window.location.port || 'default'}`);
-      console.log('─'.repeat(60));
-      
-      if (hasSubstantialSemantics) {
-        console.log('✅ SUCCESS: Semantics are ENABLED and working');
-        console.log('   Screen readers can read this page!');
-        
-        // Visual indicator
-        document.body.style.border = '5px solid green';
-        document.title = '[✅ ENABLED] ' + document.title.replace(/^\[.*?\] /, '');
-      } else {
-        console.log('✅ Semantics are DISABLED');
-        console.log('   Page has minimal accessibility');
-        
-        // Visual indicator
-        document.body.style.border = '5px solid red';
-        document.title = '[❌ DISABLED] ' + document.title.replace(/^\[.*?\] /, '');
-      }
-      
-      console.log('='.repeat(60));
-      
-      return result;
-    };
-    
-    /**
-     * Determines if accessibility should be auto-enabled based on port configuration
-     * 
-     * @returns {boolean} true if auto-enable is configured for current port
-     * 
-     * Port configuration:
-     * - Port 1111: Auto-enable (true) - Testing environment
-     * - Port 8080: Auto-enable (falase) - Development environment
-     * - Port 0000: Auto-disable (false) - Disabled for testing
-     * - Other ports: Follow URL parameter
-     */
-    function shouldAutoEnableAccessibility() {
-      const port = window.location.port;
-      const config = {
-        '1111': true,   // Auto-enable for testing
-        '8080': false,   // Auto-disable for development
-        '0000': false,  // Explicitly disabled for testing disabled state
-        // not sure yet if port 0000 is possible, considr swtiching to 1234 and 4321 or deploying with text
-      };
-      
-      return config[port] === true;
-    }
-    
-    /**
-     * Attempts to click the Flutter invisible accessibility button
-     * This simulates the user clicking the invisible "Enable accessibility" button
-     * 
-     * According to Flutter docs: https://docs.flutter.dev/ui/accessibility/web-accessibility#invisible-button
-     * The button has aria-label="Enable accessibility"
-     * 
-     * @returns {boolean} true if button was found and clicked, false otherwise
-     */
-    function autoEnableAccessibility() {
-      console.log('🔍 Searching for Flutter invisible accessibility button...');
-      
-      const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
-      console.log(`Trying selector: "${selector}"`);
-      
-      const invisibleButton = document.querySelector(selector);
-      
-      if (!invisibleButton) {
-        console.log('❌ Flutter invisible button not found');
-        return false;
-      }
-      
-      console.log('✅ Found invisible button');
-      console.log(`   Element:`, invisibleButton);
-      console.log(`   aria-label: ${invisibleButton.getAttribute('aria-label')}`);
-      
-      try {
-        invisibleButton.click();
-        console.log('✅ Clicked button - accessibility enabled');
-        
-        // Verify after delay
-        setTimeout(() => {
-          const verify = verifySemanticsInDOM();
-          if (verify.actuallyWorking) {
-            console.log('🎉 Verification confirmed: Semantics working!');
-          } else {
-            console.log('⚠️ Warning: Button clicked but semantics may not be active');
-          }
-        }, 300);
-        
-        return true;
-      } catch (error) {
-        console.error('❌ Error clicking button:', error);
-        return false;
-      }
-    }
-    
-    // Auto-verify on page load
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        console.log('🔍 Auto-checking semantics on page load...');
-        window.verifySemanticsInDOM();
-        
-        // Auto-enable accessibility based on port configuration
-        if (shouldAutoEnableAccessibility()) {
-          console.log(`🚀 Port ${window.location.port} configured for auto-enable`);
-          autoEnableAccessibility();
-        } else if (window.location.port === '0000') {
-          console.log('🚫 Port 0000 configured for auto-disable - skipping auto-enable');
-        }
-      }, 500);
     });
   </script>
 </head>
