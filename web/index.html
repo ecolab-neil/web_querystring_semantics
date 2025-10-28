@@ -46,35 +46,21 @@
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-
       document.getElementById('invisibleButton').addEventListener('click', function() {
-          console.log('✅ Invisible Button clicked!');
-      });
-
-      // Click the invisibleButton to trigger the invisibleOffscreenButton
-      document.getElementById('invisibleButton').addEventListener('click', function() {
-      /*
-          const selector = 'flt-semantics-placeholder[aria-label="Enable accessibility"]';
-          const invisibleButton = ;
-          invisibleButton.click();
-          */
           document.querySelector('flt-semantics-placeholder[aria-label="Enable accessibility"]')
               .click();
-
       });
     });
   </script>
 </head>
 <body>
-  <!-- Flutter container with buttons stacked on top -->
+  <!-- Flutter container with button  on top -->
   <div class="flutter-container" id="flutter_host">
     <!-- Flutter app will render here -->
     <script src="flutter_bootstrap.js" async></script>
-    
-    <!-- Buttons stacked on top of Flutter -->
-  <!--  <button class="invisible-button" id="visibleButton">Pretend Visible Button</button> -->
-    <button class="invisible-button" aria-label="Invisible Button" id="invisibleButton"></button>
-  <!--  <button class="invisible-offscreen-button" id="invisibleOffscreenButton"></button> -->
+    <!-- button so that automated test can tap this button
+     and its javascript can tap flutter's accessibility toggle-->
+    <button class="invisible-button" id="invisibleButton"></button>
   </div>
 </body>
 </html>

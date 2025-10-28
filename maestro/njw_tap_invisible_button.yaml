@@ -1,17 +1,15 @@
-# Maestro Test: Flutter Web Semantics Toggle
-# Simple version - tests basic visibility after semantics enabled
-# For full JavaScript testing, use the manual test documentation
-
 url: "http://localhost:8080?enableSemantics=false"
-jsEngine: graaljs # must be in top flow not subflow
 ---
 - launchApp
-
-# Wait for page to load
-- assertNotVisible: "Definiely not there"
 - assertNotVisible: "Go to Page 1"
-
 - tapOn:
-    id: "invisibleButton" # or any other selector
+    # Tap onscreen invisible button that has passthrough click to flutter's "Enable accessibility"
+    # maestro does not appear to support document. selectors
+    id: "invisibleButton"
+    label: "Enable semantics for flutter web"
 - assertVisible: "Go to Page 1"
+- assertNotVisible: "Page 1 Body"
+- tapOn: "Go to Page 1"
+# Semantics still works on next page, and if it didn't the invisible Button is still there.
+- assertVisible: "Page 1 Body"
 
