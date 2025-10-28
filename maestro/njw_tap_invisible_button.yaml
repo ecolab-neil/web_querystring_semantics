@@ -2,6 +2,9 @@ url: "http://localhost:8080?enableSemantics=false"
 ---
 - launchApp
 - assertNotVisible: "Go to Page 1"
+- assertVisible:
+      id: "invisibleButton"
+      label: "Confirm accessibility custom button is present"
 - tapOn:
     # Tap onscreen invisible button that has passthrough click to flutter's "Enable accessibility"
     # maestro does not appear to support document. selectors
@@ -12,4 +15,8 @@ url: "http://localhost:8080?enableSemantics=false"
 - tapOn: "Go to Page 1"
 # Semantics still works on next page, and if it didn't the invisible Button is still there.
 - assertVisible: "Page 1 Body"
+- assertVisible:
+      id: "invisibleButton"
+      label: "Confirm accessibility custom button is present"
+
 
