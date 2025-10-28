@@ -45,9 +45,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _toggleSemantics(bool enable) {
-    setState(() {
-      _semanticsEnabled = enable;
-    });
+    setState(() => _semanticsEnabled = enable);
 
     if (enable) {
       SemanticsBinding.instance.ensureSemantics();
@@ -64,8 +62,6 @@ class _MyAppState extends State<MyApp> {
             .toString(),
       );
 
-      // Verify that semantics are actually working
-      _verifySemanticsInDOM();
     } else {
       final uri = UriExtensions.currentUrl;
       final params = Map<String, String>.from(uri.queryParameters);
@@ -79,34 +75,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _verifySemanticsInDOM() {
-    // Wait a brief moment for DOM to update, then verify via script injection
-    Future.delayed(const Duration(milliseconds: 200), () {
-      // Inject and execute verification script
-      final script = html.ScriptElement()
-        ..type = 'text/javascript'
-        ..text = 'window.verifySemanticsInDOM();';
-      html.document.head!.append(script);
-
-      print(
-        '🔍 Verification triggered - check browser console for detailed results',
-      );
-
-      // Remove script after execution
-      Future.delayed(const Duration(milliseconds: 100), () {
-        script.remove();
-      });
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'QueryString Semantics Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
       routes: {
         '/': (context) => QueryStringPage(
           semanticsEnabled: _semanticsEnabled,
@@ -122,7 +94,6 @@ class _MyAppState extends State<MyApp> {
         ),
       },
     );
-  }
 }
 
 class QueryStringPage extends StatefulWidget {
@@ -164,19 +135,16 @@ class _QueryStringPageState extends State<QueryStringPage> {
     html.window.history.pushState(null, '', newUri.toString());
 
     // Actually enable/disable semantics
+    // Note: There's no direct way to disable semantics once enabled
+
     if (value) {
       SemanticsBinding.instance.ensureSemantics();
-    } else {
-      // Note: There's no direct way to disable semantics once enabled
-      // The user would need to refresh the page
     }
-
     _parseQueryString();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('QueryString Semantics Demo'),
@@ -272,7 +240,6 @@ class _QueryStringPageState extends State<QueryStringPage> {
         ),
       ),
     );
-  }
 }
 
 class Page1 extends StatelessWidget {
